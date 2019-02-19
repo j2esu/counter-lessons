@@ -1,6 +1,6 @@
 # Counter lessons
 
-**Each lesson has a commit**
+**Each lesson has a commit** [(commits)](https://github.com/j2esu/counter-lessons/commits/master)
 
 [YouTube channel](https://www.youtube.com/c/evgenyux)
 
