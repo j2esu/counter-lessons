@@ -1,7 +1,9 @@
 package ru.uxapps.counterlessons;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_main);
 
-        CounterList list = new CounterList(findViewById(R.id.list));
+        CounterList list = new CounterList(findViewById(R.id.list), new CounterList.Listener() {
+            @Override
+            public void onPlus(Counter counter) {
+                Toast.makeText(MainActivity.this, "Plus on " + counter.name, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onMinus(Counter counter) {
+                Toast.makeText(MainActivity.this, "Minus on " + counter.name, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onOpen(Counter counter) {
+                startActivity(new Intent(MainActivity.this, CounterActivity.class));
+            }
+        });
         list.setCounters(createTestData());
     }
 

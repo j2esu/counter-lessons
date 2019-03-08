@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?selectableItemBackground">
 
     <TextView
         android:id="@+id/i_counter_name"
@@ -21,6 +22,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/i_counter_minus"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:text="-"
@@ -40,6 +42,7 @@
             />
 
         <TextView
+            android:id="@+id/i_counter_plus"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:text="+"
