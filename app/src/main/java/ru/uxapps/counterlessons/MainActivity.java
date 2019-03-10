@@ -16,19 +16,20 @@ public class MainActivity extends AppCompatActivity {
         mList = new CounterList(findViewById(R.id.list), new CounterList.Listener() {
             @Override
             public void onPlus(Counter counter) {
-                Repo.getInstance().inc(counter);
+                Repo.getInstance().setValue(counter, counter.value + 1);
                 updateList();
             }
 
             @Override
             public void onMinus(Counter counter) {
-                Repo.getInstance().dec(counter);
+                Repo.getInstance().setValue(counter, counter.value - 1);
                 updateList();
             }
 
             @Override
             public void onOpen(Counter counter) {
-                startActivity(new Intent(MainActivity.this, CounterActivity.class));
+                startActivity(new Intent(MainActivity.this, CounterActivity.class)
+                        .putExtra(CounterActivity.EXTRA_ID, counter.id));
             }
         });
         updateList();

@@ -2,7 +2,6 @@ package ru.uxapps.counterlessons;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Repo {
 
@@ -23,10 +22,9 @@ public class Repo {
 
     private List<Counter> createTestData() {
         int count = 100;
-        Random random = new Random();
         List<Counter> data = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            data.add(new Counter("Counter " + (i + 1), random.nextInt(1000)));
+            data.add(new Counter(i,"Counter " + (i + 1), i));
         }
         return data;
     }
@@ -35,16 +33,17 @@ public class Repo {
         return mList;
     }
 
-    public void inc(Counter counter) {
-        int index = mList.indexOf(counter);
-        mList.remove(index);
-        mList.add(index, new Counter(counter.name, counter.value + 1));
+    public Counter getCounter(long id) {
+        for (Counter counter : mList) {
+            if (counter.id == id) return counter;
+        }
+        return null;
     }
 
-    public void dec(Counter counter) {
+    public void setValue(Counter counter, int value) {
         int index = mList.indexOf(counter);
         mList.remove(index);
-        mList.add(index, new Counter(counter.name, counter.value - 1));
+        mList.add(index, new Counter(counter.id, counter.name, value));
     }
 
 }
