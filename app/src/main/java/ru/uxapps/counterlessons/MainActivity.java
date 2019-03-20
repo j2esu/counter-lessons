@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Repo.Listener {
 
     private CounterList mList;
 
@@ -17,13 +17,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPlus(Counter counter) {
                 Repo.getInstance().setValue(counter, counter.value + 1);
-                updateList();
             }
 
             @Override
             public void onMinus(Counter counter) {
                 Repo.getInstance().setValue(counter, counter.value - 1);
-                updateList();
             }
 
             @Override
@@ -32,11 +30,18 @@ public class MainActivity extends AppCompatActivity {
                         .putExtra(CounterActivity.EXTRA_ID, counter.id));
             }
         });
-        updateList();
+        onDataChanged();
+        Repo.getInstance().addListener(this);
     }
 
-    private void updateList() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Repo.getInstance().removeListener(this);
+    }
+
+    @Override
+    public void onDataChanged() {
         mList.setCounters(Repo.getInstance().getCounters());
     }
-
 }

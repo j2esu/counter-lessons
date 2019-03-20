@@ -1,9 +1,17 @@
 package ru.uxapps.counterlessons;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Repo {
+
+    public interface Listener {
+
+        void onDataChanged();
+
+    }
 
     private static Repo sInstance;
 
@@ -15,6 +23,7 @@ public class Repo {
     }
 
     private List<Counter> mList;
+    private final Set<Listener> mListeners = new HashSet<>();
 
     private Repo() {
         mList = createTestData();
@@ -44,6 +53,19 @@ public class Repo {
         int index = mList.indexOf(counter);
         mList.remove(index);
         mList.add(index, new Counter(counter.id, counter.name, value));
+        notifyChanged();
+    }
+
+    private void notifyChanged() {
+        for (Listener listener : mListeners) listener.onDataChanged();
+    }
+
+    public void addListener(Listener listener) {
+        mListeners.add(listener);
+    }
+
+    public void removeListener(Listener listener) {
+        mListeners.remove(listener);
     }
 
 }
