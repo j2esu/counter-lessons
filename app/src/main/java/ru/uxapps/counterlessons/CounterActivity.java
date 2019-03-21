@@ -18,6 +18,7 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener 
         super.onCreate(savedInstanceState);
         mCounterId = getIntent().getLongExtra(EXTRA_ID, -1);
         setContentView(R.layout.a_counter);
+        findViewById(R.id.a_counter_back).setOnClickListener(v -> finish());
         mValueTv = findViewById(R.id.value);
         mNameTv = findViewById(R.id.name);
         findViewById(R.id.plus).setOnClickListener(v -> changeValue(getCounter().value + 1));

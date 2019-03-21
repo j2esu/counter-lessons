@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context=".CounterActivity">
+
+    <ImageView
+        android:id="@+id/a_counter_back"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:srcCompat="?homeAsUpIndicator"
+        android:padding="16dp"
+        app:tint="?android:colorForeground"
+        android:background="?selectableItemBackgroundBorderless"
+        />
 
     <TextView
         android:id="@+id/name"
@@ -14,7 +25,7 @@
         android:text="First counter"
         android:layout_gravity="center"
         android:padding="16dp"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         />
 
     <TextView
@@ -23,7 +34,7 @@
         android:layout_height="0dp"
         tools:text="0"
         android:gravity="center"
-        android:textSize="80sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display4"
         android:layout_weight="1"
         />
 
@@ -33,23 +44,32 @@
         android:layout_height="wrap_content"
         android:text="Reset"
         android:layout_gravity="center_horizontal"
+        style="@style/Widget.AppCompat.Button.Borderless"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:orientation="horizontal"
-        android:background="#FF9800">
+        android:background="@drawable/counter_item_bg"
+        android:layout_margin="16dp">
 
         <TextView
             android:id="@+id/minus"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-"
-            android:textSize="40dp"
+            android:text="−"
+            android:textSize="70dp"
             android:gravity="center"
             android:textColor="#fff"
+            android:background="?selectableItemBackgroundBorderless"
+            />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?android:colorBackground"
             />
 
         <TextView
@@ -59,8 +79,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="+"
-            android:textSize="40dp"
+            android:textSize="70dp"
             android:textColor="#fff"
+            android:background="?selectableItemBackgroundBorderless"
             />
 
     </LinearLayout>

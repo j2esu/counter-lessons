@@ -39,6 +39,10 @@ public class CounterList {
 
         private List<Counter> mData;
 
+        CounterAdapter() {
+            setHasStableIds(true);
+        }
+
         void setData(List<Counter> data) {
             mData = data;
             notifyDataSetChanged();
@@ -58,6 +62,11 @@ public class CounterList {
         @Override
         public int getItemCount() {
             return mData.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return mData.get(position).id;
         }
 
         class Vh extends RecyclerView.ViewHolder {
