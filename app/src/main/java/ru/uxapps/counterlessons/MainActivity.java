@@ -16,12 +16,12 @@ public class MainActivity extends AppCompatActivity implements Repo.Listener {
         mList = new CounterList(findViewById(R.id.list), new CounterList.Listener() {
             @Override
             public void onPlus(Counter counter) {
-                Repo.getInstance().setValue(counter, counter.value + 1);
+                Repo.getInstance(MainActivity.this).setValue(counter, counter.value + 1);
             }
 
             @Override
             public void onMinus(Counter counter) {
-                Repo.getInstance().setValue(counter, counter.value - 1);
+                Repo.getInstance(MainActivity.this).setValue(counter, counter.value - 1);
             }
 
             @Override
@@ -31,17 +31,17 @@ public class MainActivity extends AppCompatActivity implements Repo.Listener {
             }
         });
         onDataChanged();
-        Repo.getInstance().addListener(this);
+        Repo.getInstance(this).addListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Repo.getInstance().removeListener(this);
+        Repo.getInstance(this).removeListener(this);
     }
 
     @Override
     public void onDataChanged() {
-        mList.setCounters(Repo.getInstance().getCounters());
+        mList.setCounters(Repo.getInstance(this).getCounters());
     }
 }

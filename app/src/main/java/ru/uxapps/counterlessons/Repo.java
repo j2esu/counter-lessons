@@ -1,11 +1,17 @@
 package ru.uxapps.counterlessons;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Repo {
+public class Repo extends SQLiteOpenHelper {
 
     public interface Listener {
 
@@ -15,44 +21,86 @@ public class Repo {
 
     private static Repo sInstance;
 
-    public static Repo getInstance() {
+    public static Repo getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new Repo();
+            sInstance = new Repo(context.getApplicationContext());
         }
         return sInstance;
     }
 
-    private List<Counter> mList;
+    private static final String DB_NAME = "counter.db";
+    private static final int VERSION = 2;
+
+    private static final String TABLE_NAME = "Counters";
+    private static final String ID = "id";
+    private static final String VAL = "val";
+    private static final String NAME = "name";
+
+    private static final String CREATE_SQL =
+            "CREATE TABLE " + TABLE_NAME + " (" +
+            ID + " INTEGER PRIMARY KEY, " +
+            VAL + " INTEGER NOT NULL, " +
+            NAME + " TEXT NOT NULL" +
+            ");";
+
     private final Set<Listener> mListeners = new HashSet<>();
 
-    private Repo() {
-        mList = createTestData();
+    private Repo(Context context) {
+        super(context, DB_NAME, null, VERSION);
     }
 
-    private List<Counter> createTestData() {
-        int count = 100;
-        List<Counter> data = new ArrayList<>(count);
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_SQL);
+        createTestData(db);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
+    }
+
+    private void createTestData(SQLiteDatabase db) {
+        int count = 10;
         for (int i = 0; i < count; i++) {
-            data.add(new Counter(i,"Counter " + (i + 1), i));
+            ContentValues cv = new ContentValues();
+            cv.put(NAME, "Counter " + i);
+            cv.put(VAL, i);
+            db.insert(TABLE_NAME, null, cv);
         }
-        return data;
     }
 
     public List<Counter> getCounters() {
-        return mList;
+        String[] cols = {ID, VAL, NAME};
+        Cursor c = getReadableDatabase().query(TABLE_NAME, cols, null, null,
+                null, null, null);
+        List<Counter> list = new ArrayList<>(c.getColumnCount());
+        while (c.moveToNext()) {
+            long id = c.getLong(0);
+            int val = c.getInt(1);
+            String name = c.getString(2);
+            list.add(new Counter(id, name, val));
+        }
+        c.close();
+        return list;
     }
 
     public Counter getCounter(long id) {
-        for (Counter counter : mList) {
-            if (counter.id == id) return counter;
-        }
-        return null;
+        String[] cols = {ID, VAL, NAME};
+        Cursor c = getReadableDatabase().query(TABLE_NAME, cols, ID + " = " + id, null,
+                null, null, null);
+        c.moveToFirst();
+        Counter counter = new Counter(c.getLong(0), c.getString(2),
+                c.getInt(1));
+        c.close();
+        return counter;
     }
 
     public void setValue(Counter counter, int value) {
-        int index = mList.indexOf(counter);
-        mList.remove(index);
-        mList.add(index, new Counter(counter.id, counter.name, value));
+        ContentValues cv = new ContentValues();
+        cv.put(VAL, value);
+        getWritableDatabase().update(TABLE_NAME, cv, ID + " = " + counter.id, null);
         notifyChanged();
     }
 
@@ -67,5 +115,4 @@ public class Repo {
     public void removeListener(Listener listener) {
         mListeners.remove(listener);
     }
-
 }

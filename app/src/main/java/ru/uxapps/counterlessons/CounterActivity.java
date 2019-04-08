@@ -31,21 +31,21 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener 
                     .show();
         });
         onDataChanged();
-        Repo.getInstance().addListener(this);
+        Repo.getInstance(this).addListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Repo.getInstance().removeListener(this);
+        Repo.getInstance(this).removeListener(this);
     }
 
     private void changeValue(int newValue) {
-        Repo.getInstance().setValue(getCounter(), newValue);
+        Repo.getInstance(this).setValue(getCounter(), newValue);
     }
 
     private Counter getCounter() {
-        return Repo.getInstance().getCounter(mCounterId);
+        return Repo.getInstance(this).getCounter(mCounterId);
     }
 
     @Override
