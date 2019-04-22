@@ -3,6 +3,7 @@ package ru.uxapps.counterlessons;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements Repo.Listener {
 
@@ -12,6 +13,15 @@ public class MainActivity extends AppCompatActivity implements Repo.Listener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.main);
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.m_main_create) {
+                new CreateDialog().show(getSupportFragmentManager(), null);
+            }
+            return true;
+        });
 
         mList = new CounterList(findViewById(R.id.list), new CounterList.Listener() {
             @Override

@@ -64,11 +64,15 @@ public class Repo extends SQLiteOpenHelper {
     private void createTestData(SQLiteDatabase db) {
         int count = 10;
         for (int i = 0; i < count; i++) {
-            ContentValues cv = new ContentValues();
-            cv.put(NAME, "Counter " + i);
-            cv.put(VAL, i);
-            db.insert(TABLE_NAME, null, cv);
+            addCounterInner(db, "Counter " + i, i);
         }
+    }
+
+    private void addCounterInner(SQLiteDatabase db, String name, int val) {
+        ContentValues cv = new ContentValues();
+        cv.put(NAME, name);
+        cv.put(VAL, val);
+        db.insert(TABLE_NAME, null, cv);
     }
 
     public List<Counter> getCounters() {
@@ -101,6 +105,11 @@ public class Repo extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(VAL, value);
         getWritableDatabase().update(TABLE_NAME, cv, ID + " = " + counter.id, null);
+        notifyChanged();
+    }
+
+    public void addCounter(String name) {
+        addCounterInner(getWritableDatabase(), name, 0);
         notifyChanged();
     }
 
