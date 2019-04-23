@@ -5,7 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-public class CounterActivity extends AppCompatActivity implements Repo.Listener {
+public class CounterActivity extends AppCompatActivity implements Repo.Listener, ConfirmDeleteDialog.Host {
 
     public static final String EXTRA_ID = "EXTRA_ID";
 
@@ -19,6 +19,8 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener 
         mCounterId = getIntent().getLongExtra(EXTRA_ID, -1);
         setContentView(R.layout.a_counter);
         findViewById(R.id.a_counter_back).setOnClickListener(v -> finish());
+        findViewById(R.id.a_counter_del).setOnClickListener(v ->
+                new ConfirmDeleteDialog().show(getSupportFragmentManager(), null));
         mValueTv = findViewById(R.id.value);
         mNameTv = findViewById(R.id.name);
         findViewById(R.id.plus).setOnClickListener(v -> changeValue(getCounter().value + 1));
@@ -51,7 +53,16 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener 
     @Override
     public void onDataChanged() {
         Counter counter = getCounter();
-        mValueTv.setText(String.valueOf(counter.value));
-        mNameTv.setText(counter.name);
+        if (counter != null) {
+            mValueTv.setText(String.valueOf(counter.value));
+            mNameTv.setText(counter.name);
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    public void onConfirm() {
+        Repo.getInstance(this).deleteCounter(mCounterId);
     }
 }

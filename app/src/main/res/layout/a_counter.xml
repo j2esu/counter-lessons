@@ -8,15 +8,32 @@
     android:orientation="vertical"
     tools:context=".CounterActivity">
 
-    <ImageView
-        android:id="@+id/a_counter_back"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        app:srcCompat="?homeAsUpIndicator"
-        android:padding="16dp"
-        app:tint="?android:colorForeground"
-        android:background="?selectableItemBackgroundBorderless"
-        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/a_counter_back"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:srcCompat="?homeAsUpIndicator"
+            android:padding="16dp"
+            app:tint="?android:colorForeground"
+            android:background="?selectableItemBackgroundBorderless"
+            />
+
+        <ImageView
+            android:id="@+id/a_counter_del"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:srcCompat="@drawable/ic_delete"
+            android:padding="16dp"
+            app:tint="?android:colorForeground"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_gravity="end"
+            />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/name"

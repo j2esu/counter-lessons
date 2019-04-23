@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,6 +76,11 @@ public class Repo extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, cv);
     }
 
+    public void deleteCounter(long id) {
+        getWritableDatabase().delete(TABLE_NAME, ID + " = " + id, null);
+        notifyChanged();
+    }
+
     public List<Counter> getCounters() {
         String[] cols = {ID, VAL, NAME};
         Cursor c = getReadableDatabase().query(TABLE_NAME, cols, null, null,
@@ -90,15 +96,17 @@ public class Repo extends SQLiteOpenHelper {
         return list;
     }
 
+    @Nullable
     public Counter getCounter(long id) {
         String[] cols = {ID, VAL, NAME};
-        Cursor c = getReadableDatabase().query(TABLE_NAME, cols, ID + " = " + id, null,
-                null, null, null);
-        c.moveToFirst();
-        Counter counter = new Counter(c.getLong(0), c.getString(2),
-                c.getInt(1));
-        c.close();
-        return counter;
+        try (Cursor c = getReadableDatabase().query(TABLE_NAME, cols, ID + " = " + id, null,
+                null, null, null)) {
+            if (c.moveToFirst()) {
+                return new Counter(c.getLong(0), c.getString(2),
+                        c.getInt(1));
+            }
+            return null;
+        }
     }
 
     public void setValue(Counter counter, int value) {
