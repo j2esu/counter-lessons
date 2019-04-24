@@ -21,6 +21,8 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
         findViewById(R.id.a_counter_back).setOnClickListener(v -> finish());
         findViewById(R.id.a_counter_del).setOnClickListener(v ->
                 new ConfirmDeleteDialog().show(getSupportFragmentManager(), null));
+        findViewById(R.id.a_counter_edit).setOnClickListener(v ->
+                EditDialog.create(mCounterId).show(getSupportFragmentManager(), null));
         mValueTv = findViewById(R.id.value);
         mNameTv = findViewById(R.id.name);
         findViewById(R.id.plus).setOnClickListener(v -> changeValue(getCounter().value + 1));

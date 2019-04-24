@@ -81,6 +81,13 @@ public class Repo extends SQLiteOpenHelper {
         notifyChanged();
     }
 
+    public void changeName(long counterId, String name) {
+        ContentValues cv = new ContentValues();
+        cv.put(NAME, name);
+        getWritableDatabase().update(TABLE_NAME, cv, ID + " = " + counterId, null);
+        notifyChanged();
+    }
+
     public List<Counter> getCounters() {
         String[] cols = {ID, VAL, NAME};
         Cursor c = getReadableDatabase().query(TABLE_NAME, cols, null, null,
