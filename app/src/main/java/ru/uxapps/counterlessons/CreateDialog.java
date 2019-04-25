@@ -16,15 +16,16 @@ public class CreateDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.d_create, null, false);
-        return new AlertDialog.Builder(requireContext())
+        EditText nameEt = view.findViewById(R.id.d_create_name);
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Create counter")
                 .setPositiveButton("Create", (dialog, which) -> {
-                    // TODO: 4/22/2019 filter illegal input
-                    String name = ((EditText) view.findViewById(R.id.d_create_name))
-                            .getText().toString();
+                    String name = nameEt.getText().toString();
                     Repo.getInstance(getContext()).addCounter(name);
                 })
                 .setView(view)
                 .create();
+        InputFilters.nameFilter(nameEt, alertDialog);
+        return alertDialog;
     }
 }

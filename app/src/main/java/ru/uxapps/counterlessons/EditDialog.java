@@ -31,7 +31,7 @@ public class EditDialog extends AppCompatDialogFragment {
         Repo repo = Repo.getInstance(getContext());
         nameEt.setText(repo.getCounter(counterId).name);
 
-        return new AlertDialog.Builder(requireContext())
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Edit counter")
                 .setPositiveButton("Save", (dialog, which) -> {
                     // TODO: 4/22/2019 filter illegal input
@@ -40,5 +40,7 @@ public class EditDialog extends AppCompatDialogFragment {
                 })
                 .setView(view)
                 .create();
+        InputFilters.nameFilter(nameEt, alertDialog);
+        return alertDialog;
     }
 }

@@ -91,7 +91,7 @@ public class Repo extends SQLiteOpenHelper {
     public List<Counter> getCounters() {
         String[] cols = {ID, VAL, NAME};
         Cursor c = getReadableDatabase().query(TABLE_NAME, cols, null, null,
-                null, null, null);
+                null, null, ID + " DESC");
         List<Counter> list = new ArrayList<>(c.getColumnCount());
         while (c.moveToNext()) {
             long id = c.getLong(0);
