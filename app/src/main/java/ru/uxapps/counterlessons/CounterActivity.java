@@ -3,6 +3,7 @@ package ru.uxapps.counterlessons;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 public class CounterActivity extends AppCompatActivity implements Repo.Listener, ConfirmDeleteDialog.Host {
@@ -25,8 +26,8 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
                 EditDialog.create(mCounterId).show(getSupportFragmentManager(), null));
         mValueTv = findViewById(R.id.value);
         mNameTv = findViewById(R.id.name);
-        findViewById(R.id.plus).setOnClickListener(v -> changeValue(getCounter().value + 1));
-        findViewById(R.id.minus).setOnClickListener(v -> changeValue(getCounter().value - 1));
+        findViewById(R.id.plus).setOnClickListener(v -> inc());
+        findViewById(R.id.minus).setOnClickListener(v -> dec());
         findViewById(R.id.reset).setOnClickListener(v -> {
             int oldValue = getCounter().value;
             changeValue(0);
@@ -48,6 +49,14 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
         Repo.getInstance(this).setValue(getCounter(), newValue);
     }
 
+    private void inc() {
+        changeValue(getCounter().value + 1);
+    }
+
+    private void dec() {
+        changeValue(getCounter().value - 1);
+    }
+
     private Counter getCounter() {
         return Repo.getInstance(this).getCounter(mCounterId);
     }
@@ -66,5 +75,18 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
     @Override
     public void onConfirm() {
         Repo.getInstance(this).deleteCounter(mCounterId);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            inc();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            dec();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
