@@ -1,9 +1,11 @@
 package ru.uxapps.counterlessons;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.TextView;
 
 public class CounterActivity extends AppCompatActivity implements Repo.Listener, ConfirmDeleteDialog.Host {
@@ -13,6 +15,7 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
     private long mCounterId;
     private TextView mValueTv;
     private TextView mNameTv;
+    private View mTint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,7 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
                 EditDialog.create(mCounterId).show(getSupportFragmentManager(), null));
         mValueTv = findViewById(R.id.value);
         mNameTv = findViewById(R.id.name);
+        mTint = findViewById(R.id.counter_tint);
         findViewById(R.id.plus).setOnClickListener(v -> inc());
         findViewById(R.id.minus).setOnClickListener(v -> dec());
         findViewById(R.id.reset).setOnClickListener(v -> {
@@ -67,6 +71,7 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
         if (counter != null) {
             mValueTv.setText(String.valueOf(counter.value));
             mNameTv.setText(counter.name);
+            mTint.getBackground().setColorFilter(counter.color, PorterDuff.Mode.SRC_ATOP);
         } else {
             finish();
         }

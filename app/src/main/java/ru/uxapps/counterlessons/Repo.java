@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class Repo extends SQLiteOpenHelper {
@@ -30,18 +32,20 @@ public class Repo extends SQLiteOpenHelper {
     }
 
     private static final String DB_NAME = "counter.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     private static final String TABLE_NAME = "Counters";
     private static final String ID = "id";
     private static final String VAL = "val";
     private static final String NAME = "name";
+    private static final String COLOR = "color";
 
     private static final String CREATE_SQL =
             "CREATE TABLE " + TABLE_NAME + " (" +
             ID + " INTEGER PRIMARY KEY, " +
             VAL + " INTEGER NOT NULL, " +
-            NAME + " TEXT NOT NULL" +
+            NAME + " TEXT NOT NULL, " +
+            COLOR + " INTEGER NOT NULL" +
             ");";
 
     private final Set<Listener> mListeners = new HashSet<>();
@@ -53,7 +57,6 @@ public class Repo extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_SQL);
-        createTestData(db);
     }
 
     @Override
@@ -62,17 +65,11 @@ public class Repo extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    private void createTestData(SQLiteDatabase db) {
-        int count = 10;
-        for (int i = 0; i < count; i++) {
-            addCounterInner(db, "Counter " + i, i);
-        }
-    }
-
-    private void addCounterInner(SQLiteDatabase db, String name, int val) {
+    private void addCounterInner(SQLiteDatabase db, String name, int val, int color) {
         ContentValues cv = new ContentValues();
         cv.put(NAME, name);
         cv.put(VAL, val);
+        cv.put(COLOR, color);
         db.insert(TABLE_NAME, null, cv);
     }
 
@@ -89,7 +86,7 @@ public class Repo extends SQLiteOpenHelper {
     }
 
     public List<Counter> getCounters() {
-        String[] cols = {ID, VAL, NAME};
+        String[] cols = {ID, VAL, NAME, COLOR};
         Cursor c = getReadableDatabase().query(TABLE_NAME, cols, null, null,
                 null, null, ID + " DESC");
         List<Counter> list = new ArrayList<>(c.getColumnCount());
@@ -97,7 +94,8 @@ public class Repo extends SQLiteOpenHelper {
             long id = c.getLong(0);
             int val = c.getInt(1);
             String name = c.getString(2);
-            list.add(new Counter(id, name, val));
+            int color = c.getInt(3);
+            list.add(new Counter(id, name, val, color));
         }
         c.close();
         return list;
@@ -105,12 +103,12 @@ public class Repo extends SQLiteOpenHelper {
 
     @Nullable
     public Counter getCounter(long id) {
-        String[] cols = {ID, VAL, NAME};
+        String[] cols = {ID, VAL, NAME, COLOR};
         try (Cursor c = getReadableDatabase().query(TABLE_NAME, cols, ID + " = " + id, null,
                 null, null, null)) {
             if (c.moveToFirst()) {
                 return new Counter(c.getLong(0), c.getString(2),
-                        c.getInt(1));
+                        c.getInt(1), c.getInt(3));
             }
             return null;
         }
@@ -124,7 +122,10 @@ public class Repo extends SQLiteOpenHelper {
     }
 
     public void addCounter(String name) {
-        addCounterInner(getWritableDatabase(), name, 0);
+        Random random = new Random();
+        int randomColor = Color.argb(255, random.nextInt(256),
+                random.nextInt(256), random.nextInt(256));
+        addCounterInner(getWritableDatabase(), name, 0, randomColor);
         notifyChanged();
     }
 

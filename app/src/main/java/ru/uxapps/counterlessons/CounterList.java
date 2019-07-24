@@ -1,9 +1,11 @@
 package ru.uxapps.counterlessons;
 
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -73,12 +75,14 @@ public class CounterList {
 
             private final TextView mName;
             private final TextView mValue;
+            private final View mTint;
 
             Vh(ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.i_counter, parent, false));
                 mName = itemView.findViewById(R.id.i_counter_name);
                 mValue = itemView.findViewById(R.id.i_counter_value);
+                mTint = itemView.findViewById(R.id.i_counter_tint);
                 itemView.findViewById(R.id.i_counter_minus).setOnClickListener(v ->
                         mListener.onMinus(mData.get(getAdapterPosition())));
                 itemView.findViewById(R.id.i_counter_plus).setOnClickListener(v ->
@@ -90,6 +94,7 @@ public class CounterList {
             void bind(Counter counter) {
                 mName.setText(counter.name);
                 mValue.setText(String.valueOf(counter.value));
+                mTint.getBackground().setColorFilter(counter.color, PorterDuff.Mode.SRC_ATOP);
             }
         }
     }
