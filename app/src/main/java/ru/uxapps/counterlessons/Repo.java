@@ -81,6 +81,16 @@ public class Repo extends SQLiteOpenHelper {
     public void changeName(long counterId, String name) {
         ContentValues cv = new ContentValues();
         cv.put(NAME, name);
+        updateCounter(counterId, cv);
+    }
+
+    public void changeColor(long counterId, int color) {
+        ContentValues cv = new ContentValues();
+        cv.put(COLOR, color);
+        updateCounter(counterId, cv);
+    }
+
+    private void updateCounter(long counterId, ContentValues cv) {
         getWritableDatabase().update(TABLE_NAME, cv, ID + " = " + counterId, null);
         notifyChanged();
     }

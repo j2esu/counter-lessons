@@ -29,14 +29,19 @@ public class EditDialog extends AppCompatDialogFragment {
         EditText nameEt = view.findViewById(R.id.d_edit_name);
         long counterId = getArguments().getLong(ARG_ID);
         Repo repo = Repo.getInstance(getContext());
-        nameEt.setText(repo.getCounter(counterId).name);
+        Counter counter = repo.getCounter(counterId);
+        nameEt.setText(counter.name);
+
+        ColorPicker colorPicker = new TextColorPicker(view);
+        colorPicker.setColor(counter.color);
 
         AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Edit counter")
                 .setPositiveButton("Save", (dialog, which) -> {
-                    // TODO: 4/22/2019 filter illegal input
                     String name = nameEt.getText().toString();
                     repo.changeName(counterId, name);
+                    int color = colorPicker.getColor();
+                    repo.changeColor(counterId, color);
                 })
                 .setView(view)
                 .create();
