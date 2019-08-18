@@ -34,13 +34,17 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         />
 
-    <EditText
-        android:id="@+id/d_edit_color"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="1"
-        android:inputType="text"
-        android:hint="Color"
-        />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/d_edit_colors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            />
+
+    </HorizontalScrollView>
 
 </LinearLayout>

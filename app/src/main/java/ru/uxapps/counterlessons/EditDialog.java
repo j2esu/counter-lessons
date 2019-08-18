@@ -32,7 +32,7 @@ public class EditDialog extends AppCompatDialogFragment {
         Counter counter = repo.getCounter(counterId);
         nameEt.setText(counter.name);
 
-        ColorPicker colorPicker = new TextColorPicker(view);
+        ColorPicker colorPicker = new ScrollColorPicker(view, ColorPicker.COLORS);
         colorPicker.setColor(counter.color);
 
         AlertDialog alertDialog = new AlertDialog.Builder(requireContext())

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class Repo extends SQLiteOpenHelper {
     }
 
     private static final String DB_NAME = "counter.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
     private static final String TABLE_NAME = "Counters";
     private static final String ID = "id";
@@ -133,8 +132,7 @@ public class Repo extends SQLiteOpenHelper {
 
     public void addCounter(String name) {
         Random random = new Random();
-        int randomColor = Color.argb(255, random.nextInt(256),
-                random.nextInt(256), random.nextInt(256));
+        int randomColor = ColorPicker.COLORS[random.nextInt(ColorPicker.COLORS.length)];
         addCounterInner(getWritableDatabase(), name, 0, randomColor);
         notifyChanged();
     }
