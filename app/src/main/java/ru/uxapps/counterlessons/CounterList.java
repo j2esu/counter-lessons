@@ -83,9 +83,9 @@ public class CounterList {
                 mName = itemView.findViewById(R.id.i_counter_name);
                 mValue = itemView.findViewById(R.id.i_counter_value);
                 mTint = itemView.findViewById(R.id.i_counter_tint);
-                itemView.findViewById(R.id.i_counter_minus).setOnClickListener(v ->
+                new FastCountButton(itemView.findViewById(R.id.i_counter_minus), () ->
                         mListener.onMinus(mData.get(getAdapterPosition())));
-                itemView.findViewById(R.id.i_counter_plus).setOnClickListener(v ->
+                new FastCountButton(itemView.findViewById(R.id.i_counter_plus), () ->
                         mListener.onPlus(mData.get(getAdapterPosition())));
                 itemView.setOnClickListener(v ->
                         mListener.onOpen(mData.get(getAdapterPosition())));

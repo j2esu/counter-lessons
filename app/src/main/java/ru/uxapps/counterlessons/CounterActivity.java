@@ -30,8 +30,8 @@ public class CounterActivity extends AppCompatActivity implements Repo.Listener,
         mValueTv = findViewById(R.id.value);
         mNameTv = findViewById(R.id.name);
         mTint = findViewById(R.id.counter_tint);
-        findViewById(R.id.plus).setOnClickListener(v -> inc());
-        findViewById(R.id.minus).setOnClickListener(v -> dec());
+        new FastCountButton(findViewById(R.id.plus), this::inc);
+        new FastCountButton(findViewById(R.id.minus), this::dec);
         findViewById(R.id.reset).setOnClickListener(v -> {
             int oldValue = getCounter().value;
             changeValue(0);
