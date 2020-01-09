@@ -1,7 +1,9 @@
 package ru.uxapps.counterlessons;
 
 import android.graphics.PorterDuff;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,23 +25,35 @@ public class CounterList {
 
     }
 
+    private final RecyclerView mRv;
     private final CounterAdapter mAdapter;
     private final Listener mListener;
 
     public CounterList(RecyclerView rv, Listener listener) {
+        mRv = rv;
         mListener = listener;
-        rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
         mAdapter = new CounterAdapter();
         rv.setAdapter(mAdapter);
+        setLayout(true);
     }
 
     public void setCounters(List<Counter> list) {
         mAdapter.setData(list);
     }
 
+    public void setLayout(boolean isList) {
+        if (isList) mRv.setLayoutManager(new LinearLayoutManager(mRv.getContext()));
+        else mRv.setLayoutManager(new GridLayoutManager(mRv.getContext(), 2));
+        mAdapter.setType(isList ? CounterAdapter.TYPE_WIDE : CounterAdapter.TYPE_TALL);
+    }
+
     class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.Vh> {
 
+        private static final int TYPE_WIDE = 0;
+        private static final int TYPE_TALL = 1;
+
         private List<Counter> mData;
+        private int mType = TYPE_WIDE;
 
         CounterAdapter() {
             setHasStableIds(true);
@@ -50,10 +64,21 @@ public class CounterList {
             notifyDataSetChanged();
         }
 
+        void setType(int type) {
+            mType = type;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return mType;
+        }
+
         @NonNull
         @Override
         public Vh onCreateViewHolder(@NonNull ViewGroup parent, int type) {
-            return new Vh(parent);
+            if (type == TYPE_WIDE) return new Vh(parent, R.layout.i_counter_wide);
+            else return new Vh(parent, R.layout.i_counter_tall);
         }
 
         @Override
@@ -77,9 +102,9 @@ public class CounterList {
             private final TextView mValue;
             private final View mTint;
 
-            Vh(ViewGroup parent) {
+            Vh(ViewGroup parent, @LayoutRes int itemLayout) {
                 super(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.i_counter, parent, false));
+                        .inflate(itemLayout, parent, false));
                 mName = itemView.findViewById(R.id.i_counter_name);
                 mValue = itemView.findViewById(R.id.i_counter_value);
                 mTint = itemView.findViewById(R.id.i_counter_tint);

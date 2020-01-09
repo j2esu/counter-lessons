@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements Repo.Listener {
 
     private CounterList mList;
+    private boolean mIsListLayout = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,10 @@ public class MainActivity extends AppCompatActivity implements Repo.Listener {
         toolbar.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getItemId() == R.id.m_main_create) {
                 new CreateDialog().show(getSupportFragmentManager(), null);
+            }
+            if (menuItem.getItemId() == R.id.m_main_layout) {
+                mIsListLayout = !mIsListLayout;
+                mList.setLayout(mIsListLayout);
             }
             return true;
         });
@@ -40,8 +45,18 @@ public class MainActivity extends AppCompatActivity implements Repo.Listener {
                         .putExtra(CounterActivity.EXTRA_ID, counter.id));
             }
         });
+        if (savedInstanceState != null) {
+            mIsListLayout = savedInstanceState.getBoolean("list_layout", true);
+            mList.setLayout(mIsListLayout);
+        }
         onDataChanged();
         Repo.getInstance(this).addListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("list_layout", mIsListLayout);
     }
 
     @Override
